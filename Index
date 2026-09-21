@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BLACK-BOX | Portafolio 2026</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,700;0,900;1,900&family=B612:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================================
+       0. FUENTE LOCAL
+       ========================================================= */
+    @font-face {
+      font-family: 'SplitFlapTV';
+      src: url('Split-Flap-TV-BlackLine.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    /* =========================================================
+       1. VARIABLES Y BASE
+       ========================================================= */
+    :root {
+      /* Colores */
+      --bg-page: #0b0d10;
+      --bg-dark: #07090b;
+      --bg-card: #12151b;
+      --border-card: #222630;
+      --border-section: #1c2029;
+      --text: #ffffff;
+      --text-muted: #a0a5b5;
+      --accent-pink: #ff0055;
+      --accent-yellow: #e5ff00;
+      --accent-red: #d90429;
+      --accent-green: #00ff66;
+
+      /* Layout */
+      --nav-width: 110px;
+      --content-left: 140px;   /* espacio para el menú lateral */
+      --content-right: 50px;
+      --content-max: 1400px;
+      --gap: 25px;
+      --radius: 6px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text);
+      font-family: 'B612', monospace, sans-serif;
+      overflow-x: hidden;
+    }
+
+    img {
+      display: block;
+    }
+
+    /* Contenedor de secciones de contenido */
+    .content-section {
+      max-width: var(--content-max);
+      margin: 0 auto;
+    }
+
+    /* =========================================================
+       2. NAVEGACIÓN LATERAL (BISEL DE AVIÓNICA)
+       ========================================================= */
+    .cockpit-nav {
+      position: fixed;
+      top: 20px;
+      left: 0;
+      z-index: 1000;
+      width: var(--nav-width);
+      height: calc(100vh - 40px);
+      padding: 30px 0;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+
+      background-color: #6e7371;
+      box-shadow: 5px 0 20px rgba(0, 0, 0, 0.6);
+      clip-path: polygon(
+        0 0,
+        calc(100% - 25px) 0,
+        100% 25px,
+        100% calc(100% - 25px),
+        calc(100% - 25px) 100%,
+        0 100%
+      );
+
+      /* Oculto por defecto; se muestra al hacer scroll */
+      opacity: 0;
+      transform: translateX(-100%);
+      pointer-events: none;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .cockpit-nav.visible {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+
+    .cockpit-btn {
+      width: 65px;
+      height: 65px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background-color: #111315;
+      color: var(--text);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 1px;
+      text-decoration: none;
+
+      border: 2px solid #22252a;
+      border-radius: 4px;
+      box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.15),
+        3px 4px 8px rgba(0, 0, 0, 0.5);
+
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s ease-in-out;
+    }
+
+    .cockpit-btn:hover {
+      background-color: #1a1d22;
+      border-color: var(--accent-yellow);
+      color: var(--accent-yellow);
+      transform: scale(1.03);
+    }
+
+    .cockpit-btn:active {
+      transform: scale(0.96);
+      box-shadow:
+        inset 0 3px 6px rgba(0, 0, 0, 0.8),
+        1px 1px 3px rgba(0, 0, 0, 0.4);
+    }
+
+    /* =========================================================
+       3. PORTADA + SPLIT-FLAP
+       ========================================================= */
+    .main-content {
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    .hero-section {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .hero-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    /* Letrero */
+    .split-flap-container {
+      position: absolute;
+      top: 6vw;
+      left: 6vw;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .split-flap-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    /* Tarjeta rígida de marco negro */
+    .flap-card {
+      position: relative;
+      width: 62px;
+      height: 90px;
+      perspective: 350px;
+      background: linear-gradient(180deg, #1f1f1f 0%, #151515 50%, #0d0d0d 51%, #1a1a1a 100%);
+      border: 1px solid #000;
+      border-radius: 5px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.8);
+    }
+
+    /* Bisagra central */
+    .flap-card::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      z-index: 8;
+      width: 100%;
+      height: 3px;
+      background-color: #050505;
+      box-shadow: 0 1px 1px rgba(255, 255, 255, 0.08);
+      transform: translateY(-50%);
+    }
+
+    /* Giro 3D */
+    .card-inner {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform-style: preserve-3d;
+      opacity: 0;
+    }
+
+    .card-inner span {
+      font-family: 'SplitFlapTV', 'Montserrat', monospace;
+      font-size: 3.1rem;
+      font-weight: 900;
+      line-height: 1;
+      color: var(--accent-yellow);
+      text-shadow: 0 0 3px rgba(0, 0, 0, 0.7);
+    }
+
+    /* La animación se activa desde JS con la clase .animate.
+       Cada tarjeta define su orden con --i (ver HTML). */
+    .split-flap-container.animate .card-inner {
+      animation: flipCard 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+      animation-delay: calc(0.08s + var(--i) * 0.07s);
+    }
+
+    @keyframes flipCard {
+      0% {
+        transform: rotateX(-90deg);
+        opacity: 0;
+        filter: brightness(0.5);
+      }
+      50% {
+        opacity: 1;
+        filter: brightness(1.15);
+      }
+      100% {
+        transform: rotateX(0deg);
+        opacity: 1;
+        filter: brightness(1);
+      }
+    }
+
+    /* =========================================================
+       4. SEPARADOR RADAR
+       ========================================================= */
+    .radar-separator {
+      width: 100%;
+      padding: 60px 20px 60px 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-dark);
+      border-top: 2px solid var(--border-section);
+      border-bottom: 2px solid var(--border-section);
+    }
+
+    .radar-container {
+      width: 100%;
+      max-width: 550px;
+      text-align: center;
+    }
+
+    .radar-image {
+      width: 100%;
+      height: auto;
+    }
+
+    /* =========================================================
+       5. TÍTULOS DE SECCIÓN
+       Tipografía: Montserrat negra en cursiva, tamaño fluido.
+       ========================================================= */
+    .section-title,
+    .section-header h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-style: italic;
+      font-weight: 900;
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .section-title {
+      margin-bottom: 40px;
+      padding-left: 15px;
+      border-left: 4px solid var(--accent-pink);
+    }
+
+    .section-header {
+      margin-bottom: 30px;
+    }
+
+    .section-header p {
+      margin-top: 10px;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      color: var(--accent-yellow);
+    }
+
+    /* =========================================================
+       6. GALERÍA DE FOTOGRAFÍA
+       ========================================================= */
+    .gallery-section {
+      padding: 80px var(--content-right) 30px var(--content-left);
+    }
+
+    .feature-block {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+      margin-bottom: 50px;
+      padding: 30px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius);
+    }
+
+    .feature-text {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .feature-tag {
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      color: var(--accent-yellow);
+    }
+
+    .feature-title {
+      font-size: 1.5rem;
+      line-height: 1.3;
+      color: var(--text);
+    }
+
+    .feature-description {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+
+    .feature-image img {
+      width: 100%;
+      height: auto;
+      max-height: 450px;
+      object-fit: contain;
+      border-radius: 4px;
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      gap: var(--gap);
+    }
+
+    .photo-card {
+      overflow: hidden;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 4px;
+    }
+
+    .photo-card img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+
+    /* =========================================================
+       7. TICKERS ANIMADOS (SEPARADORES)
+       ========================================================= */
+    .ticker-banner {
+      position: relative;
+      left: 50%;
+      right: 50%;
+      width: 100vw;
+      margin: 30px -50vw 50px;
+      padding: 16px 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .ticker-planespotting {
+      background-color: var(--accent-red);
+      box-shadow: 0 0 25px rgba(217, 4, 41, 0.4);
+    }
+
+    .ticker-retrato {
+      margin-top: 20px;
+      background-color: var(--accent-green);
+      box-shadow: 0 0 25px rgba(0, 255, 102, 0.4);
+    }
+
+    .ticker-retrato .ticker-item {
+      color: #080a0c;
+    }
+
+    .ticker-track {
+      display: flex;
+      width: max-content;
+      animation: marquee 20s linear infinite;
+    }
+
+    .ticker-item {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      padding: 0 30px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 2.5rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    .ticker-symbol {
+      font-size: 1.5rem;
+      color: #000;
+      opacity: 0.6;
+    }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* =========================================================
+       8. PLANESPOTTING (BENTO)
+       ========================================================= */
+    .planespotting-section {
+      padding: 0 var(--content-right) 30px var(--content-left);
+    }
+
+    .bento-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: var(--gap);
+    }
+
+    .bento-side {
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap);
+    }
+
+    .bento-main,
+    .bento-sub {
+      display: flex;
+      flex-direction: column;
+      padding: 15px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius);
+    }
+
+    .bento-main img,
+    .bento-sub img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      border-radius: 4px;
+    }
+
+    /* =========================================================
+       9. RETRATO
+       Marcos amarillos en las esquinas, como el visor de una cámara.
+       ========================================================= */
+    .portrait-section {
+      padding: 0 var(--content-right) 100px var(--content-left);
+    }
+
+    .portrait-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr 1fr;
+      gap: var(--gap);
+      align-items: stretch;
+    }
+
+    .portrait-center-stack {
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap);
+    }
+
+    .portrait-card {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius);
+    }
+
+    .portrait-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    .portrait-card.vertical img   { aspect-ratio: 3 / 4; }
+    .portrait-card.horizontal img { aspect-ratio: 16 / 9; }
+
+    /* Marcas de encuadre (4 esquinas) sobre la foto */
+    .portrait-card::after {
+      content: '';
+      position: absolute;
+      inset: 27px;
+      pointer-events: none;
+      background:
+        linear-gradient(var(--accent-yellow), var(--accent-yellow)) top left / 24px 2px no-repeat,
+        linear-gradient(var(--accent-yellow), var(--accent-yellow)) top left / 2px 24px no-repeat,
+        linear-gradient(var(--accent-yellow), var(--accent-yellow)) top right / 24px 2px no-repeat,
+        linear-gradient(var(--accent-yellow), var(--accent-yellow)) top right / 2px 24px no-repeat,
+        linear-gradient(var(--accent-yellow), var(--accent-yellow)) bottom left / 24px 2px no-repeat,
+        linear-gradient(var(--accent-yellow), var(--accent-yellow)) bottom left / 2px 24px no-repeat,
+        linear-gradient(var(--accent-yellow), var(--accent-yellow)) bottom right / 24px 2px no-repeat,
+        linear-gradient(var(--accent-yellow), var(--accent-yellow)) bottom right / 2px 24px no-repeat;
+    }
+
+    /* =========================================================
+       10. RESPONSIVE
+       ========================================================= */
+    @media (max-width: 900px) {
+      .feature-block {
+        grid-template-columns: 1fr;
+      }
+
+      .photo-grid,
+      .bento-grid,
+      .portrait-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .gallery-section,
+      .planespotting-section,
+      .portrait-section {
+        padding-left: 30px;
+        padding-right: 30px;
+      }
+
+      .radar-separator {
+        padding-left: 20px;
+      }
+
+      .ticker-item {
+        font-size: 1.8rem;
+      }
+
+      .split-flap-container {
+        top: 8vw;
+        left: 5vw;
+      }
+
+      .flap-card {
+        width: 38px;
+        height: 58px;
+      }
+
+      .card-inner span {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ========== NAVEGACIÓN LATERAL ========== -->
+  <nav class="cockpit-nav" id="cockpitNav">
+    <a href="#hero" class="cockpit-btn">NAV</a>
+    <a href="#fotografia" class="cockpit-btn">MAP</a>
+    <a href="#video" class="cockpit-btn">VUE</a>
+    <a href="#contacto" class="cockpit-btn">WX</a>
+  </nav>
+
+  <main class="main-content">
+
+    <!-- ========== 1. PORTADA ========== -->
+    <section id="hero" class="hero-section">
+      <img src="Portadapfprueba.png" alt="Portada Black Box" class="hero-image">
+
+      <!-- Letrero split-flap: --i define el orden de la animación en cascada -->
+      <div class="split-flap-container" id="splitFlapContainer">
+        <div class="split-flap-row">
+          <div class="flap-card" style="--i:0"><div class="card-inner"><span>B</span></div></div>
+          <div class="flap-card" style="--i:1"><div class="card-inner"><span>L</span></div></div>
+          <div class="flap-card" style="--i:2"><div class="card-inner"><span>A</span></div></div>
+          <div class="flap-card" style="--i:3"><div class="card-inner"><span>C</span></div></div>
+          <div class="flap-card" style="--i:4"><div class="card-inner"><span>K</span></div></div>
+          <div class="flap-card" style="--i:5"><div class="card-inner"><span>-</span></div></div>
+        </div>
+        <div class="split-flap-row">
+          <div class="flap-card" style="--i:6"><div class="card-inner"><span>B</span></div></div>
+          <div class="flap-card" style="--i:7"><div class="card-inner"><span>O</span></div></div>
+          <div class="flap-card" style="--i:8"><div class="card-inner"><span>X</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 2. SEPARADOR RADAR ========== -->
+    <section class="radar-separator">
+      <div class="radar-container">
+        <img src="Radar.png" alt="Radar Meteorológico" class="radar-image">
+      </div>
+    </section>
+
+    <!-- ========== 3. FOTOGRAFÍA ========== -->
+    <section id="fotografia" class="content-section gallery-section">
+      <h2 class="section-title">Fotografía</h2>
+
+      <div class="feature-block">
+        <div class="feature-text">
+          <span class="feature-tag">AIRPORT: MSSS // Desfile militar</span>
+          <h3 class="feature-title">Desfile Militar, Día de la Independencia</h3>
+          <p class="feature-description">
+            Despliegue militar conmemorativo a la independencia nacional.
+            La serie documenta con precisión técnica las formaciones terrestres, el paso de bloques tácticos y las pasadas aéreas, capturando dinamismo, simetría y textura en condiciones de luz natural directa.
+          </p>
+        </div>
+        <div class="feature-image">
+          <img src="principal.png" alt="Fotografía destacada del desfile militar">
+        </div>
+      </div>
+
+      <div class="photo-grid">
+        <div class="photo-card"><img src="Primera.png" alt="Muestra 1"></div>
+        <div class="photo-card"><img src="segunda.png" alt="Muestra 2"></div>
+        <div class="photo-card"><img src="Tercera.png" alt="Muestra 3"></div>
+      </div>
+    </section>
+
+    <!-- ========== 4. TICKER: PLANESPOTTING ========== -->
+    <div class="ticker-banner ticker-planespotting" data-ticker="PLANESPOTTING" aria-hidden="true">
+      <div class="ticker-track"></div>
+    </div>
+
+    <!-- ========== 5. PLANESPOTTING ========== -->
+    <section class="content-section planespotting-section">
+      <div class="section-header">
+        <h3>Vector de Intercepción &amp; Vuelo</h3>
+        <p>AVIONES EN OPERACIÓN</p>
+      </div>
+
+      <div class="bento-grid">
+        <div class="bento-main">
+          <img src="a1.jpg" alt="Avión, fotografía principal">
+        </div>
+        <div class="bento-side">
+          <div class="bento-sub"><img src="a2.png" alt="Avión, captura 1"></div>
+          <div class="bento-sub"><img src="a3.jpg" alt="Avión, captura 2"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 6. TICKER: RETRATO ========== -->
+    <div class="ticker-banner ticker-retrato" data-ticker="RETRATO" aria-hidden="true">
+      <div class="ticker-track"></div>
+    </div>
+
+    <!-- ========== 7. RETRATO ========== -->
+    <section class="content-section portrait-section">
+      <div class="section-header">
+        <h3>Firma Biométrica &amp; Carácter</h3>
+        <p>CAPTURA HUMANA</p>
+      </div>
+
+      <div class="portrait-grid">
+        <div class="portrait-card vertical"><img src="r1.png" alt="Retrato vertical 1"></div>
+
+        <div class="portrait-center-stack">
+          <div class="portrait-card horizontal"><img src="r2.png" alt="Retrato horizontal 1"></div>
+          <div class="portrait-card horizontal"><img src="r3.png" alt="Retrato horizontal 2"></div>
+        </div>
+
+        <div class="portrait-card vertical"><img src="r4.png" alt="Retrato vertical 2"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========== SCRIPTS ========== -->
+  <script>
+    const nav = document.getElementById('cockpitNav');
+    const heroSection = document.getElementById('hero');
+    const flapContainer = document.getElementById('splitFlapContainer');
+
+    /* 1. Mostrar/ocultar el menú lateral al pasar la portada */
+    window.addEventListener('scroll', () => {
+      const showNav = window.scrollY > heroSection.offsetHeight * 0.4;
+      nav.classList.toggle('visible', showNav);
+    });
+
+    /* 2. Reiniciar la animación split-flap cada vez que la portada es visible */
+    const heroObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        flapContainer.classList.remove('animate');
+        if (entry.isIntersecting) {
+          void flapContainer.offsetWidth; // fuerza el reflow para reiniciar
+          flapContainer.classList.add('animate');
+        }
+      });
+    }, { threshold: 0.25 });
+
+    heroObserver.observe(heroSection);
+
+    /* 3. Generar los ítems repetidos de los tickers (8 copias para el loop) */
+    document.querySelectorAll('.ticker-banner').forEach((banner) => {
+      const track = banner.querySelector('.ticker-track');
+      const text = banner.dataset.ticker;
+
+      track.innerHTML = Array.from({ length: 8 }, () =>
+        `<div class="ticker-item">${text} <span class="ticker-symbol">▲</span></div>`
+      ).join('');
+    });
+  </script>
+
+</body>
+</html>
